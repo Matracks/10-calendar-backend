@@ -7,7 +7,7 @@ const getEventos = async(req, res = response) => {
 
     res.json({
         ok: true,
-        msg: eventos
+        eventos
     })
 
 }
@@ -48,15 +48,15 @@ const actualizarEvento = async(req, res = response) => {
         if ( !evento ) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Evento no existe'
+                msg: 'Evento no existe por ese id'
             })
         }
 
-        if ( evento.user.toString() !== uid) {
+        if ( evento.user.toString() !== uid ) {
             return res.status(401).json({
                 ok: false,
-                msg: 'no tiene privilegios'
-            })
+                msg: 'No tiene privilegio de editar este evento'
+            });
         }
 
         const newEvent = {
@@ -64,7 +64,7 @@ const actualizarEvento = async(req, res = response) => {
             user: uid
         }
 
-        const updateEvent = await Evento.find( eventoId, newEvent, {new: true} )
+        const updateEvent = await Evento.findByIdAndUpdate( eventoId, newEvent, {new: true} )
 
         res.json({
             ok: true,
